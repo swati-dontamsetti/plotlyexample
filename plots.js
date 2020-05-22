@@ -1,44 +1,40 @@
-// Use D3 fetch to read the JSON file
-// The data from the JSON file is arbitrarily named importedData as the argument
-d3.json("data/data.json").then((importedData) => {
-  // console.log(importedData);
-  var data = importedData;
+console.log(data);
+// YOUR CODE HERE
 
-  // Sort the data array using the greekSearchResults value
-  data.sort(function(a, b) {
-    return parseFloat(b.greekSearchResults) - parseFloat(a.greekSearchResults);
-  });
+var greekRoman = data.map(god => god.pair)
 
-  // Slice the first 10 objects for plotting
-  data = data.slice(0, 10);
+console.log(greekRoman)
 
-  // Reverse the array due to Plotly's defaults
-  data = data.reverse();
+var greekGod = data.map(god => god.greekSearchResults)
 
-  // Trace1 for the Greek Data
-  var trace1 = {
-    x: data.map(row => row.greekSearchResults),
-    y: data.map(row => row.greekName),
-    text: data.map(row => row.greekName),
+console.log(greekGod)
+
+var romanGod = data.map(god => god.romanSearchResults)
+
+console.log(romanGod)
+
+var greek = {
+    x: greekRoman,
+    y: greekGod,
+    text: data.map(god => god.greekName),
     name: "Greek",
-    type: "bar",
-    orientation: "h"
-  };
+    type: "bar"
+}
 
-  // data
-  var chartData = [trace1];
+var roman = {
+    x: greekRoman,
+    y: romanGod,
+    text: data.map(god => god.romanName),
+    name: "Roman",
+    type: "bar"
+}
 
-  // Apply the group bar mode to the layout
-  var layout = {
-    title: "Greek gods search results",
-    margin: {
-      l: 100,
-      r: 100,
-      t: 100,
-      b: 100
-    }
-  };
+var data = [greek, roman]
 
-  // Render the plot to the div tag with id "plot"
-  Plotly.newPlot("plot", chartData, layout);
-});
+var layout = {
+    title: "Greek vs Roman God Popularity",
+    yaxis: {title: "# of Search Results"},
+    barmode: "group"
+}
+
+Plotly.newPlot("plot", data, layout)
